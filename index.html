@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayı Villas & Bungalows | Rezervasyon</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome İkonları -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        summerBlue: '#00A896',  
+                        summerYellow: '#FFC857',
+                        summerSky: '#EBF5DF',   
+                        wpGreen: '#25D366'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Slider için özel CSS (Yalın ve Hızlı) */
+        .slider-container { position: relative; overflow: hidden; border-radius: 0.75rem; }
+        .slider-wrapper { display: flex; transition: transform 0.4s ease-in-out; width: 300%; }
+        .slider-slide { width: 33.333%; flex-shrink: 0; }
+
+        /* Akordeon S.S.S. Akıcılığı */
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out, padding 0.3s ease-out; }
+        .faq-item.active .faq-answer { max-height: 200px; padding-top: 0.75rem; }
+        .faq-item.active .faq-icon { transform: rotate(180deg); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased pb-24 max-w-md mx-auto shadow-2xl min-h-screen flex flex-col justify-between">
+
+    <!-- 0. POP-UP KAMPANYA BİLDİRİMİ -->
+    <div id="campaignPopup" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 opacity-0 pointer-events-none transition-opacity duration-500 max-w-md mx-auto">
+        <div class="relative w-full bg-white p-6 rounded-2xl shadow-2xl text-center border border-gray-100">
+            <button onclick="closePopup()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 bg-summerSky text-summerBlue rounded-full flex items-center justify-center mx-auto mb-3 text-lg border border-summerBlue/10 shadow-inner">
+                <i class="fa-solid fa-percent animate-pulse"></i>
+            </div>
+            <h4 class="text-sm font-black text-gray-950 mb-1 uppercase tracking-tight">Sezona Özel Son Fırsatlar!</h4>
+            <p class="text-xs text-gray-600 mb-4 leading-relaxed">Önümüzdeki ay için kalan son boş tarihlerde geçerli %10 doğrudan rezervasyon indirimini kaçırmayın.</p>
+            <a href="https://wa.me/905320000000?text=Merhaba,%20sitedeki%20%C3%B6zel%20kampanyal%C4%B1%20tarihler%20hakk%C4%B1nda%20bilgi%20alabilir%20miyim?" target="_blank" class="block w-full py-2.5 bg-summerYellow hover:bg-opacity-95 text-gray-950 font-black text-xs rounded-xl transition shadow-md uppercase tracking-wider">
+                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> Fırsat Tarihlerini Sor
+            </a>
+        </div>
+    </div>
+
+    <!-- 1. HEADER (INSTAGRAM LOGOSU EKLENDİ) -->
+    <header class="bg-white border-b border-gray-100 px-4 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+        <div class="flex items-center gap-2">
+            <img src="WhatsApp Image 2026-06-16 at 11.22.54.webp" alt="Kayı Villas Logo" class="h-9 w-auto object-contain" onerror="this.style.display='none'; document.getElementById('backup-logo').style.display='flex';">
+            <div id="backup-logo" class="hidden bg-summerBlue text-white p-2 rounded-xl items-center justify-center w-9 h-9">
+                <i class="fa-solid fa-tree text-base text-summerYellow"></i>
+            </div>
+            <div>
+                <span class="text-[9px] font-bold tracking-widest text-summerBlue block uppercase leading-none">FETHİYE KAYAKÖY</span>
+                <h1 class="text-sm font-black tracking-tight text-gray-900 mt-0.5">KAYI VILLAS & BUNGALOWS</h1>
+            </div>
+        </div>
+        <!-- Sağ Üst İletişim Butonları -->
+        <div class="flex items-center gap-2">
+            <a href="https://www.instagram.com/kayivillas/" target="_blank" class="bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white p-2.5 rounded-full text-xs flex items-center justify-center w-9 h-9 border border-black/5 shadow-sm transition-transform active:scale-90">
+                <i class="fa-brands fa-instagram text-sm"></i>
+            </a>
+            <a href="tel:+905320000000" class="bg-summerSky/50 text-summerBlue p-2.5 rounded-full text-xs flex items-center justify-center w-9 h-9 border border-summerBlue/10 shadow-sm transition-transform active:scale-90">
+                <i class="fa-solid fa-phone"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 2. HERO BANNER -->
+    <section class="relative h-[290px] flex flex-col justify-end p-5 text-left overflow-hidden shadow-inner">
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-80">
+            <source src="uzay.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent z-10"></div>
+        
+        <div class="relative z-20 space-y-2.5">
+            <span class="text-[10px] text-summerYellow font-black uppercase tracking-wider bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full inline-block">🔥 SINIRLI MÜSAİTLİK</span>
+            <h2 class="text-xl font-black text-white tracking-tight leading-tight">Zeytin Ağaçları Arasında İzole Bir Dünya</h2>
+            
+            <div class="grid grid-cols-2 gap-y-1 gap-x-2 text-[11px] text-gray-200 font-medium">
+                <div><i class="fa-solid fa-circle-check text-summerYellow mr-1"></i> Özel Havuz & Bahçe</div>
+                <div><i class="fa-solid fa-circle-check text-summerYellow mr-1"></i> %100 Tam Mahremiyet</div>
+                <div><i class="fa-solid fa-circle-check text-summerYellow mr-1"></i> Günlük Köy Kahvaltısı</div>
+                <div><i class="fa-solid fa-circle-check text-summerYellow mr-1"></i> Aracısız / Tesis Sahibi</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. GÜVEN BLOĞU -->
+    <section class="bg-white py-4 px-3 border-b border-gray-100 grid grid-cols-4 gap-1 text-center shadow-sm">
+        <div class="border-r border-gray-100 last:border-0">
+            <span class="text-base font-black text-summerBlue block">1200+</span>
+            <span class="text-[9px] text-gray-500 font-bold uppercase block leading-tight">Mutlu Misafir</span>
+        </div>
+        <div class="border-r border-gray-100 last:border-0">
+            <span class="text-base font-black text-summerBlue block">4.9/5</span>
+            <span class="text-[9px] text-gray-500 font-bold uppercase block leading-tight">Memnuniyet</span>
+        </div>
+        <div class="border-r border-gray-100 last:border-0">
+            <span class="text-base font-black text-summerBlue block">%100</span>
+            <span class="text-[9px] text-gray-500 font-bold uppercase block leading-tight">Korunaklı Havuz</span>
+        </div>
+        <div class="last:border-0">
+            <span class="text-base font-black text-summerBlue block">Aracısız</span>
+            <span class="text-[9px] text-gray-500 font-bold uppercase block leading-tight">En İyi Fiyat</span>
+        </div>
+    </section>
+
+    <!-- MÜŞTERİ YORUMLARI -->
+    <section class="p-4 bg-summerSky/20 space-y-2">
+        <h4 class="text-[10px] font-black tracking-wider text-gray-400 uppercase">Misafirlerimiz Ne Diyor?</h4>
+        <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm relative">
+            <i class="fa-solid fa-quote-left text-summerSky text-3xl absolute top-1 right-2 z-0"></i>
+            <p class="text-xs italic text-gray-600 relative z-10">"Tam anlamıyla izole ve huzurlu bir tatildi. Fotoğraflardan çok daha güzel! Havuzun dışarıdan görünmemesi harika."</p>
+            <span class="text-[10px] font-bold text-gray-950 block mt-1.5 text-right">— Hakan & Aylin K. (Haziran 2026)</span>
+        </div>
+    </section>
+
+    <!-- 4. GEÇİŞLİ SEKME MENÜSÜ -->
+    <nav class="bg-white p-2 grid grid-cols-4 gap-1 border-b border-gray-100 sticky top-[69px] z-40 shadow-sm">
+        <button onclick="switchTab(event, 'tab-bungalov')" class="tab-btn active bg-summerBlue text-white font-black text-[10px] uppercase py-2.5 px-1 rounded-xl shadow-sm text-center transition-all flex flex-col items-center gap-1">
+            <i class="fa-solid fa-campground text-xs"></i> Bungalov
+        </button>
+        <button onclick="switchTab(event, 'tab-tasev')" class="tab-btn bg-white text-gray-600 font-bold text-[10px] uppercase py-2.5 px-1 rounded-xl text-center transition-all flex flex-col items-center gap-1 border border-gray-100">
+            <i class="fa-solid fa-gopuram text-xs"></i> Taş Evler
+        </button>
+        <button onclick="switchTab(event, 'tab-restoran')" class="tab-btn bg-white text-gray-600 font-bold text-[10px] uppercase py-2.5 px-1 rounded-xl text-center transition-all flex flex-col items-center gap-1 border border-gray-100">
+            <i class="fa-solid fa-utensils text-xs"></i> Restoran
+        </button>
+        <button onclick="switchTab(event, 'tab-galeri')" class="tab-btn bg-white text-gray-600 font-bold text-[10px] uppercase py-2.5 px-1 rounded-xl text-center transition-all flex flex-col items-center gap-1 border border-gray-100">
+            <i class="fa-solid fa-images text-xs"></i> Tüm Odalar
+        </button>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="p-4 flex-grow space-y-6">
+
+        <!-- SEKME 1: BUNGALOV ALANI -->
+        <div id="tab-bungalov" class="tab-content active space-y-4">
+            <div class="relative rounded-2xl border border-gray-100 bg-white p-2 shadow-md">
+                <div class="slider-container">
+                    <div id="sliderBungalov" class="slider-wrapper">
+                        <div class="slider-slide"><img src="73aaa258-eb86-420f-98e1-4fbe6e15510d.webp" alt="Bungalov Havuz" class="w-full h-52 object-cover rounded-xl"></div>
+                        <div class="slider-slide"><img src="60e8647b-eff6-40ca-bc63-3c40684b6b26.webp" alt="Bungalov Asma Kat" class="w-full h-52 object-cover rounded-xl"></div>
+                        <div class="slider-slide"><img src="523c00c1-750a-46ea-9f1e-1b611a7e24b5.webp" alt="Bungalov Gece" class="w-full h-52 object-cover rounded-xl"></div>
+                    </div>
+                    <button onclick="moveSlider('Bungalov', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm opacity-80 hover:opacity-100"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick="moveSlider('Bungalov', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm opacity-80 hover:opacity-100"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="p-3">
+                    <span class="text-[9px] font-bold text-summerBlue uppercase tracking-wider block">Sol Taraf | Tamamen İzole</span>
+                    <h3 class="text-base font-black text-gray-950 mt-0.5 mb-1.5">A-Frame Bungalov Deneyimi (Maks 2 Kişi)</h3>
+                    <p class="text-xs text-gray-600 font-light leading-relaxed mb-3">Etrafı tamamen kapalı, dış gözlerden uzak ve asırlık zeytin ağaçlarının gölgesinde sadece size özel baş başa bir havuz ve veranda yaşamı.</p>
+                    <a href="https://wa.me/905320000000?text=Merhaba,%20Bungalov%20evlerinizin%20fiyatı%20ve%20müsaitlik%20durumu%20hakkında%20bilgi%20alabilir%20miyim?" class="w-full bg-wpGreen hover:bg-opacity-95 text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide">
+                        <i class="fa-brands fa-whatsapp"></i> Bungalov Fiyatlarını Al
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEKME 2: TAŞ EVLER ALANI -->
+        <div id="tab-tasev" class="tab-content space-y-4">
+            <div class="relative rounded-2xl border border-gray-100 bg-white p-2 shadow-md">
+                <div class="slider-container">
+                    <div id="sliderTasev" class="slider-wrapper">
+                        <div class="slider-slide"><img src="99af339b-5df8-4385-8420-f99b0a39f455.webp" alt="Taş Ev Dış Mekan" class="w-full h-52 object-cover rounded-xl"></div>
+                        <div class="slider-slide"><img src="3fde9bf6-8c7a-4fa1-acc4-954201dbc491.webp" alt="Taş Ev Salon" class="w-full h-52 object-cover rounded-xl"></div>
+                        <div class="slider-slide"><img src="031fa83e-47bf-45cf-be6c-270e96606a04.webp" alt="Taş Ev Yatak Odası" class="w-full h-52 object-cover rounded-xl"></div>
+                    </div>
+                    <button onclick="moveSlider('Tasev', -1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm opacity-80 hover:opacity-100"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick="moveSlider('Tasev', 1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-sm opacity-80 hover:opacity-100"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+                <div class="p-3">
+                    <span class="text-[9px] font-bold text-summerBlue uppercase tracking-wider block">Sağ Taraf | Geleneksel Lüks</span>
+                    <h3 class="text-base font-black text-gray-950 mt-0.5 mb-1.5">El İşçiliği Geleneksel Taş Evler</h3>
+                    <p class="text-xs text-gray-600 font-light leading-relaxed mb-3">Kalın taş duvarları ile doğal serinlik, saz tavanlı gölgelik veranda alanı ve her taş evin kendine has korunaklı özel havuzu.</p>
+                    <a href="https://wa.me/905320000000?text=Merhaba,%20Taş%20Evlerinizin%20müsaitlik%20durumunu%20ve%20fiyatlarını%20öğrenebilir%20miyim?" class="w-full bg-wpGreen hover:bg-opacity-95 text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide">
+                        <i class="fa-brands fa-whatsapp"></i> Taş Ev Fiyatlarını Sor
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEKME 3: RESTORAN VE KAHVALTI -->
+        <div id="tab-restoran" class="tab-content space-y-4">
+            <div class="relative rounded-2xl overflow-hidden shadow-md border border-gray-100 bg-white p-2">
+                <img src="18c28f53-a449-44b0-8ace-78ad59648d37.webp" alt="Kayı Restoran Alanı" class="w-full h-52 object-cover rounded-xl">
+                <div class="p-3">
+                    <span class="text-[9px] font-bold text-summerBlue uppercase tracking-wider block">Gurme Tatil Konforu</span>
+                    <h3 class="text-base font-black text-gray-950 mt-0.5 mb-2">Tesis İçi Restoran ve Doğal Lezzetler</h3>
+                    <div class="space-y-1.5 text-xs text-gray-600 mb-4">
+                        <div><i class="fa-solid fa-utensils text-summerBlue mr-2"></i> <strong>Sabah Köy Kahvaltısı:</strong> Tamamen organik ve yöresel tatlar.</div>
+                        <div><i class="fa-solid fa-cloud-sun text-summerBlue mr-2"></i> <strong>Akşam Yemeği Konforu:</strong> Gün batımı eşliğinde şık açık hava restoranı.</div>
+                    </div>
+                    <a href="https://wa.me/905320000000?text=Merhaba,%20konaklamaya%20kahvaltı%20ve%20restoran%20hizmetleri%20dahil%20mi,%20bilgi%20alabilir%20miyim?" class="w-full bg-wpGreen hover:bg-opacity-95 text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide">
+                        <i class="fa-brands fa-whatsapp"></i> Kahvaltı Detaylarını Sor
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEKME 4: TÜM ODALAR / GALERİ -->
+        <div id="tab-galeri" class="tab-content space-y-4">
+            <div class="grid grid-cols-2 gap-2">
+                <div class="bg-white p-1 rounded-xl border border-gray-100 shadow-sm text-center">
+                    <img src="60e8647b-eff6-40ca-bc63-3c40684b6b26.webp" alt="Bungalov Asma Kat" class="w-full h-28 object-cover rounded-lg">
+                    <p class="text-[10px] text-gray-600 font-medium mt-1">Asma Kat Konforu</p>
+                </div>
+                <div class="bg-white p-1 rounded-xl border border-gray-100 shadow-sm text-center">
+                    <img src="523c00c1-750a-46ea-9f1e-1b611a7e24b5.webp" alt="Bungalov Gece" class="w-full h-28 object-cover rounded-lg">
+                    <p class="text-[10px] text-gray-600 font-medium mt-1">Gece Işıkları</p>
+                </div>
+                <div class="bg-white p-1 rounded-xl border border-gray-100 shadow-sm text-center">
+                    <img src="3fde9bf6-8c7a-4fa1-acc4-954201dbc491.webp" alt="Taş Ev Salon" class="w-full h-28 object-cover rounded-lg">
+                    <p class="text-[10px] text-gray-600 font-medium mt-1">Geniş Salon</p>
+                </div>
+                <div class="bg-white p-1 rounded-xl border border-gray-100 shadow-sm text-center">
+                    <img src="031fa83e-47bf-45cf-be6c-270e96606a04.webp" alt="Taş Ev Yatak Odası" class="w-full h-28 object-cover rounded-lg">
+                    <p class="text-[10px] text-gray-600 font-medium mt-1">Konforlu Yatak Odası</p>
+                </div>
+            </div>
+            <a href="https://wa.me/905320000000?text=Merhaba,%20gördüğüm%20evlerin%20müsait%20olduğu%20tarihleri%20ve%20fiyat%20listesini%20alabilir%20miyim?" class="w-full bg-wpGreen hover:bg-opacity-95 text-white font-bold text-xs py-2.5 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide shadow">
+                <i class="fa-brands fa-whatsapp"></i> Tarih Seçip Fiyat Alın
+            </a>
+        </div>
+
+        <!-- HESAPLAMA MODÜLÜ -->
+        <section id="hizli-rezervasyon" class="bg-white border border-gray-100 rounded-2xl p-4 space-y-4 shadow-sm">
+            <h4 class="text-[10px] font-black tracking-wider text-gray-400 uppercase"><i class="fa-solid fa-calculator text-summerBlue mr-1"></i> Kolay Fiyat Hesaplama & Müsaitlik</h4>
+            
+            <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3.5 shadow-inner">
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Ev Tipi Seçin</label>
+                    <select id="villaType" onchange="calculatePrice()" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-summerBlue shadow-sm">
+                        <option value="5000">Lüks A-Frame Bungalov (Maks 2 Kişi)</option>
+                        <option value="8000">Geleneksel Taş Ev (Maks 6 Kişi)</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Dönem</label>
+                        <select id="season" onchange="calculatePrice()" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:border-summerBlue shadow-sm">
+                            <option value="1">Nisan - Mayıs (Düşük)</option>
+                            <option value="1.4">Haziran - Ağustos (Yüksek)</option>
+                            <option value="1.2">Eylül - Ekim (Orta)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase text-gray-500 mb-1">Gece Sayısı</label>
+                        <input type="number" id="nights" value="3" min="1" oninput="calculatePrice()" class="w-full p-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:border-summerBlue shadow-sm">
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-gray-200/60 flex items-center justify-between gap-2">
+                    <div>
+                        <span class="text-[9px] text-gray-400 block font-bold uppercase leading-none">Tahmini Tutar</span>
+                        <span id="totalPriceDisplay" class="text-lg font-black text-summerBlue tracking-tight">0 ₺</span>
+                    </div>
+                    <button onclick="sendReservation()" class="bg-summerBlue hover:bg-opacity-95 text-white font-black text-[10px] px-4 py-2.5 rounded-xl uppercase tracking-wider flex items-center gap-1 shadow-md transition-all active:scale-95">
+                        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp'tan Sor
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-summerSky/20 p-3 rounded-xl border border-summerBlue/10 grid grid-cols-2 gap-3 text-center">
+                <div>
+                    <span class="text-[9px] font-bold text-gray-400 block uppercase">Haziran - Temmuz</span>
+                    <span class="text-xs font-black text-red-500"><i class="fa-solid fa-fire mr-1"></i> %95 Doluluk</span>
+                </div>
+                <div class="border-l border-gray-200/60">
+                    <span class="text-[9px] font-bold text-gray-400 block uppercase">Ağustos - Eylül</span>
+                    <span class="text-xs font-black text-orange-500"><i class="fa-solid fa-clock mr-1"></i> Son Boş Odalar</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ULAŞIM VE MESAFELER -->
+        <section class="bg-white border border-gray-100 rounded-2xl p-2 shadow-md space-y-3">
+            <div class="relative rounded-xl overflow-hidden h-44 border border-gray-100">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                    <source src="cevre.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-3">
+                    <span class="text-white text-[10px] font-bold uppercase tracking-wider"><i class="fa-solid fa-compass-drafting mr-1 text-summerYellow"></i> Kuş Bakışı Tesis Çevresi</span>
+                </div>
+            </div>
+            
+            <div class="p-2 space-y-3">
+                <h3 class="text-sm font-black text-gray-950 uppercase tracking-tight"><i class="fa-solid fa-map-location-dot text-summerBlue mr-1"></i> Ulaşım ve Mesafeler</h3>
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                    <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-100/70">
+                        <span class="text-gray-400 block font-bold text-[9px] uppercase">🏛️ Hayalet Şehir</span>
+                        <span class="font-black text-gray-800">Araba 3 dk / Yürüme 15 dk</span>
+                    </div>
+                    <div class="bg-gray-50 p-2.5 rounded-xl border border-gray-100/70">
+                        <span class="text-gray-400 block font-bold text-[9px] uppercase">🏖️ Ölüdeniz Plajı</span>
+                        <span class="font-black text-gray-800">Arabayla sadece 12 dk</span>
+                    </div>
+                </div>
+                <a href="https://maps.app.goo.gl/4NpFLdj2bcb7QoQ87" target="_blank" class="w-full mt-1 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-[10px] py-2.5 rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide border border-gray-200/50">
+                    <i class="fa-solid fa-map-pin text-red-500"></i> Google Maps'te Konumu Gör
+                </a>
+            </div>
+        </section>
+
+        <!-- BALAYI & ROMANTİK KAÇAMAKLAR -->
+        <section class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-md flex flex-col">
+            <div class="relative h-64 w-full">
+                <img src="523c00c1-750a-46ea-9f1e-1b611a7e24b5.webp" alt="Kayı Romantik Anlar" class="w-full h-full object-cover object-[center_bottom]">
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-950/80 via-gray-950/20 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4 flex items-center gap-2 text-white">
+                    <i class="fa-solid fa-heart text-base text-red-400 animate-pulse"></i>
+                    <h3 class="text-sm font-black uppercase tracking-wider text-white">Balayı & Romantik Kaçamaklar</h3>
+                </div>
+            </div>
+            <div class="p-4 bg-gradient-to-b from-white to-gray-50/50 space-y-2">
+                <p class="text-xs text-gray-700 font-light leading-relaxed">Baş başa, doğanın kalbinde, tamamen korunaklı ve kimse tarafından rahatsız edilmeyeceğiniz romantik bir tatil hayal edin. Özel havuzunuz ve size özel ayrılmış yemyeşil bahçenizle unutulmaz anlar burada başlıyor.</p>
+                <div class="flex gap-4 text-[10px] text-summerBlue font-black">
+                    <span><i class="fa-solid fa-circle-check text-summerYellow mr-1"></i> Tam Mahremiyet</span>
+                    <span><i class="fa-solid fa-circle-check text-summerYellow mr-1"></i> Doğa İçinde Sessizlik</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ÇOCUK OYUN AREA -->
+        <section class="bg-white border border-gray-100 rounded-2xl p-2 shadow-md">
+            <img src="2a3ef76f-8fde-4101-816c-6f2323d55cf2.webp" alt="Çocuk Oyun Alanı" class="w-full h-40 object-cover rounded-xl">
+            <div class="p-3">
+                <span class="text-[9px] font-bold text-summerBlue uppercase tracking-wider block">Çocuklar Eğlenirken Siz Dinlenin</span>
+                <h3 class="text-base font-black text-gray-950 mt-0.5 mb-1">%100 Güvenli & Aile Dostu Yerleşke</h3>
+                <p class="text-xs text-gray-600 font-light leading-relaxed">Tesisimizdeki özel ahşap çocuk oyun alanı ve geniş, güvenli bahçe yapısı sayesinde minikler güvenle oynarken siz havuz başında tatilin tadını çıkarın.</p>
+            </div>
+        </section>
+
+        <!-- SIKÇA SORULAN SORULAR (S.S.S.) -->
+        <section class="space-y-2">
+            <h4 class="text-[10px] font-black tracking-wider text-gray-400 uppercase"><i class="fa-solid fa-circle-question text-summerBlue mr-1"></i> Sıkça Sorulan Sorular</h4>
+            <div class="space-y-1.5">
+                <div class="faq-item bg-white border border-gray-100 rounded-xl p-3.5 cursor-pointer shadow-sm" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center gap-4">
+                        <h4 class="text-xs font-bold text-gray-900">Giriş ve çıkış saatleri nedir?</h4>
+                        <span class="faq-icon text-summerBlue text-2xs transition-transform duration-300"><i class="fa-solid fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer text-[11px] text-gray-500 leading-relaxed">
+                        Giriş saatimiz en erken 16:00, çıkış saatimiz ise en geç 10:00'dur. Bu süre zarfında villalarımız bir sonraki misafirlerimiz için profesyonel ekiplerce sterilize edilerek hazırlanır.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-xl p-3.5 cursor-pointer shadow-sm" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center gap-4">
+                        <h4 class="text-xs font-bold text-gray-900">Havuzlar dışarıdan kesinlikle görünmez mi?</h4>
+                        <span class="faq-icon text-summerBlue text-2xs transition-transform duration-300"><i class="fa-solid fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer text-[11px] text-gray-500 leading-relaxed">
+                        Evet, her bir bungalovumuzun ve taş evimizin havuz terası ile bahçe alanı %100 korunaklıdır. Muhafazakar ailelerimiz ve balayı çiftlerimiz huzurla tatil yapabilirler.
+                    </div>
+                </div>
+                <div class="faq-item bg-white border border-gray-100 rounded-xl p-3.5 cursor-pointer shadow-sm" onclick="toggleFaq(this)">
+                    <div class="flex justify-between items-center gap-4">
+                        <h4 class="text-xs font-bold text-gray-900">Evcil hayvan kabul ediyor musunuz?</h4>
+                        <span class="faq-icon text-summerBlue text-2xs transition-transform duration-300"><i class="fa-solid fa-chevron-down"></i></span>
+                    </div>
+                    <div class="faq-answer text-[11px] text-gray-500 leading-relaxed">
+                        Patili dostlarımızı çok seviyoruz! Tesis kurallarımıza uyumlu, aşısı tam ve eğitimli küçük/orta boy evcil hayvanlarımızı sizlerin yanında misafir etmekten mutluluk duyarız. Detaylar için rezervasyon esnasında bize bilgi vermeniz yeterlidir.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ACİLİYET / CALL TO ACTION -->
+        <section class="bg-summerYellow/10 border border-summerYellow/30 rounded-2xl p-4 text-center space-y-2">
+            <h3 class="text-sm font-black text-gray-900 uppercase tracking-tight">🚨 Yaz Sezonunda Sınırlı Müsaitlik!</h3>
+            <p class="text-xs text-gray-600">Fethiye Kayaköy'deki bu izole evler yoğun talep görüyor. Bu hafta sonu veya gelecek aylar için son kalan uygun evleri kaçırmayın.</p>
+        </section>
+
+        <!-- KAPANIŞ KARTI -->
+        <section class="text-center py-5 bg-white border border-gray-100 rounded-2xl shadow-inner space-y-2.5">
+            <h3 class="text-base font-black text-gray-950 px-4">Bir Sonraki Tatilinizi Planlamaya Hazır mısınız?</h3>
+            <div class="flex justify-center gap-3 text-[10px] text-gray-600 font-bold">
+                <span><i class="fa-solid fa-pool-8-ball text-summerBlue mr-1"></i> Özel Havuz</span>
+                <span><i class="fa-solid fa-shield-heart text-summerBlue mr-1"></i> Tam Mahremiyet</span>
+                <span><i class="fa-solid fa-location-dot text-summerBlue mr-1"></i> Harika Konum</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- SABİT MOBİL AKSİYON BARI -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-4 py-3 flex justify-between items-center shadow-[0_-4px_15px_rgba(0,0,0,0.05)] z-50 max-w-md mx-auto">
+        <div>
+            <span class="text-[8px] uppercase tracking-wider text-gray-400 font-bold block leading-none">DOĞRUDAN TESİS SAHİBİ</span>
+            <h4 class="text-xs font-black text-gray-900 mt-0.5">Aracısız Müsaitlik</h4>
+        </div>
+        <a href="https://wa.me/905320000000?text=Merhaba,%20güncel%20müsaitlik%20durumunu%20öğrenebilir%20miyim?" class="bg-wpGreen hover:bg-opacity-95 text-white font-bold text-[11px] px-5 py-3 rounded-xl flex items-center gap-2 shadow-md uppercase tracking-wider" target="_blank">
+            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Rezervasyon
+        </a>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-100 py-6 text-center border-t border-gray-200/50 text-[10px] text-gray-400 font-medium">
+        <p>&copy; 2026 Kayı Villas & Bungalows. Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        // Sayfa Açıldıktan Tam 12 Saniye Sonra Pop-up Kampanyasını Göster
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const popup = document.getElementById('campaignPopup');
+                if(popup) popup.classList.remove('opacity-0', 'pointer-events-none');
+            }, 12000); 
+            calculatePrice();
+        });
+
+        function closePopup() {
+            const popup = document.getElementById('campaignPopup');
+            if(popup) popup.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function toggleFaq(element) {
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (item !== element) item.classList.remove('active');
+            });
+            element.classList.toggle('active');
+        }
+
+        function calculatePrice() {
+            const basePrice = parseFloat(document.getElementById('villaType').value);
+            const seasonMultiplier = parseFloat(document.getElementById('season').value);
+            const nights = parseInt(document.getElementById('nights').value) || 1;
+            
+            const total = basePrice * seasonMultiplier * nights;
+            document.getElementById('totalPriceDisplay').innerText = total.toLocaleString('tr-TR') + ' ₺';
+        }
+
+        function sendReservation() {
+            const villaSelect = document.getElementById('villaType');
+            const villaName = villaSelect.options[villaSelect.selectedIndex].text;
+            const seasonSelect = document.getElementById('season');
+            const seasonName = seasonSelect.options[seasonSelect.selectedIndex].text;
+            const nights = document.getElementById('nights').value;
+            const total = document.getElementById('totalPriceDisplay').innerText;
+
+            const text = `Merhaba Kayı Villas, web sitenizden fiyat hesaplaması yaptım:\n\n🏠 *Ev Seçimi:* ${villaName}\n📅 *Dönem:* ${seasonName}\n🌙 *Süre:* ${nights} Gece\n💰 *Tahmini Tutar:* ${total}\n\nMüsaitlik durumunu netleştirmek istiyorum.`;
+            const encodedText = encodeURIComponent(text);
+            window.open(`https://wa.me/905320000000?text=${encodedText}`, '_blank');
+        }
+
+        function switchTab(evt, tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-summerBlue', 'text-white', 'font-black');
+                btn.classList.add('bg-white', 'text-gray-600', 'font-bold', 'border', 'border-gray-100');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active', 'bg-summerBlue', 'text-white', 'font-black');
+            evt.currentTarget.classList.remove('bg-white', 'text-gray-600', 'font-bold', 'border', 'border-gray-100');
+        }
+
+        const sliderStates = { Bungalov: 0, Tasev: 0 };
+        function moveSlider(type, direction) {
+            let currentIndex = sliderStates[type];
+            currentIndex += direction;
+            
+            if (currentIndex > 2) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = 2;
+            
+            sliderStates[type] = currentIndex;
+            const wrapper = document.getElementById('slider' + type);
+            wrapper.style.transform = `translateX(-${currentIndex * 33.333}%)`;
+        }
+    </script>
+</body>
+</html>
